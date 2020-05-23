@@ -1,0 +1,56 @@
+{% extends "base.html" %} {% block content %}
+<h1>Orden</h1>
+<table class="table table-hover table-bordered text-center">
+  <tr class="text-center">
+    <th>no</th>
+    <th>Title</th>
+    <th>Price</th>
+  </tr>
+  {% for item in order.item.all %}
+  <tr>
+    <td>{{forloop.counter}}</td>
+    <td>
+      {{item.book.title}}
+      <span
+        ><a
+          href="{% url 'cart:remove-from-cart' item.book.slug %}"
+          class="text-danger"
+          ><i class="fas fa-trash"></i></a
+      ></span>
+    </td>
+    <td>${{item.book.price}}</td>
+  </tr>
+  {% empty %}
+  <td colspan="3">
+    No hay Items en el Carrito
+  </td>
+  {% endfor %}
+  {% if order.get_total %} 
+  <tr>
+    <td colspan="2">
+      <strong class="pull-right">Total</strong>
+    </td>
+    <td colspan="1">
+      <strong>${{order.get_total}}</strong>
+    </td>
+  </tr>
+  {% endif %}
+  <tr>
+    <td colspan='3'>
+      <a href="{% url 'books:book-list' %}" class="btn btn-warning pull-left">
+      {% if order %} Agregar Más Libros 
+      {% else %} Agrega un Libro 
+      {% endif  %}</a>
+    </td>
+  </tr>
+  {% if order.get_total %} 
+    <tr>
+    <td colspan='3'>
+      <a href="{% url 'cart:checkout' %}" class="btn btn-primary pull-left">
+      Realizar Compra
+      </a>
+    </td>
+  </tr>
+  {% endif  %}
+</table>
+{% endblock content %}

@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static%}
+{% block breadcrumb %}
+<li class="breadcrumb-item">
+  <a href="{% url 'books:book-list'%}">Lista de libros</a>
+</li>
+<li class="breadcrumb-item">
+  <a href="{{exercise.chapter.book.get_absolute_url}}"
+    >{{exercise.chapter.book.title}}</a
+  >
+</li>
+<li class="breadcrumb-item">
+  <a href="{{exercise.chapter.get_absolute_url}}">{{exercise.chapter.title}}</a>
+</li>
+<li class="breadcrumb-item active" aria-current="page">{{exercise.title}}</li>
+{% endblock breadcrumb %} {% block content %}
+<div class="row">
+  <main class="col-md-8">
+    {% include "book_snippet.html" with book=exercise.chapter.book %}
+  </main>
+  <aside class="col-md-4">
+    {% if book_status == 'owned' %} 
+    {% for  solution in exercise.solution_set.all %}
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button
+              class="btn btn-link btn-block text-left"
+              type="button"
+              data-toggle="collapse"
+              data-target="#collapseOne"
+              aria-expanded="true"
+              aria-controls="collapseOne"
+            >
+              Solución-{{solution.id}}
+            </button>
+          </h2>
+        </div>
+
+        <div
+          id="collapseOne"
+          class="collapse show"
+          aria-labelledby="headingOne"
+          data-parent="#accordionExample"
+        >
+          <div class="card-body">
+            <img src="{{solution.image.url}}" class="card-img-top" />
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %} 
+    {% else%}
+      <div class = "text-center">
+          <h4>No tienes acceso a estos ejercicios.
+          <a href="#">Compra el libro <a/> para tener la solución. <h4/>
+        <img src="{% static 'images/lock.png' %}"/>
+      <div/>
+    {% endif %}
+  </aside>
+</div>
+{% endblock content %}
