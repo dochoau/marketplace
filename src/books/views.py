@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from .models import Book, Chapter, Exercise
 from django.http import Http404
 from shopping_cart.models import Order, OrderItem
+from django.contrib.auth.decorators import login_required
 
 OWNED = 'owned'
 IN_CART = 'in_cart'
@@ -30,6 +31,7 @@ def book_list(request):
     return render(request, "book_list.html", context)
 
 
+@login_required
 def book_detail(request, slug):
     book = get_object_or_404(Book, slug=slug)
     book_status = check_book(request, book)
@@ -40,6 +42,7 @@ def book_detail(request, slug):
     return render(request, "book_detail.html", context)
 
 
+@login_required
 def chapter_detail(request, book_slug, chapter_number):
     # de esta forma accedemos a un atributo del atributo,
     chapter_qs = Chapter.objects.filter(
@@ -55,6 +58,7 @@ def chapter_detail(request, book_slug, chapter_number):
     return Http404
 
 
+@login_required
 def exercise_detail(request, book_slug, chapter_number, exercise_number):
     # de esta forma accedemos a un atributo del atributo,
     exercise_qs = Exercise.objects.filter(
